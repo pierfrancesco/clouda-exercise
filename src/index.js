@@ -60,8 +60,12 @@ const scoreIntervalQuery = (start_date, end_date) => {
   });
 
   const timeToComplete = (performance.now() - now) / 1000
-  console.log(`Results found: ${result.length} in ${timeToComplete} seconds`);
-  return result;
+  console.log(`Results found naive: ${result.length} in ${timeToComplete} seconds`);
+  return {
+    result: result,
+    start_date: start_date,
+    end_date: end_date
+  };
 }
 
 /**
@@ -130,8 +134,13 @@ const scoreIntervalQueryOptimized = (start_date, end_date) => {
   }
 
   const timeToComplete = (performance.now() - now) / 1000
-  console.log(`Results found: ${result.length} in ${timeToComplete} seconds`);
-  return result.sort((a, b) => new Date(a.x) - new Date(b.x));
+  console.log(`Results found binary: ${result.length} in ${timeToComplete} seconds`);
+
+  return {
+    result: result.sort((a, b) => new Date(a.x) - new Date(b.x)),
+    start_date: start_date,
+    end_date: end_date
+  };
 }
 
 // Exercise
@@ -139,12 +148,12 @@ scoreIntervalQuery('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.493000Z')
 scoreIntervalQueryOptimized('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.493000Z');
 
 // All elements (worst case for optimizated cause optimization is === to naive solution)
-scoreIntervalQuery('2015-08-19T14:00:19.352000Z', '2019-11-19T17:14:34.796982Z');
-scoreIntervalQueryOptimized('2015-08-19T14:00:19.352000Z', '2019-11-19T17:14:34.796982Z');
+//scoreIntervalQuery('2015-08-19T14:00:19.352000Z', '2019-11-19T17:14:34.796982Z');
+//scoreIntervalQueryOptimized('2015-08-19T14:00:19.352000Z', '2019-11-19T17:14:34.796982Z');
 
 // Worst case for linear solution last few dates
-scoreIntervalQuery('2019-08-02T10:33:07.768360Z', '2019-10-31T11:24:10.593497Z');
-scoreIntervalQueryOptimized('2019-08-02T10:33:07.768360Z', '2019-10-31T11:24:10.593497Z');
+//scoreIntervalQuery('2019-08-02T10:33:07.768360Z', '2019-10-31T11:24:10.593497Z');
+//scoreIntervalQueryOptimized('2019-08-02T10:33:07.768360Z', '2019-10-31T11:24:10.593497Z');
 
 
 
