@@ -1,6 +1,6 @@
 # clouda-exercise
 
-
+---
 # Requirements
 
 The data in the data.json file represent the data point to be plotted on a line graph.
@@ -38,3 +38,6 @@ The data in the data.json file represent the data point to be plotted on a line 
 
 - Consider that we want to display the data with the key “extra” on mouse over on a point of the key “score”. Write a function to format the data for this use case. 
 
+---
+
+# Response
