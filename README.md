@@ -240,9 +240,9 @@ scoreIntervalQueryOptimized('2019-08-02T10:33:07.768360Z', '2019-10-31T11:24:10.
 ```
 
 Here we have seen three different scenario:
-    1. dates at the begin of the array so full scan with `some` is a bit better 
-    2.  we're watching a range that includes all the records so both of alg need to look at all elements in the array
-    3.  we're searching for last elements therefore the `binarySearch` is better
+    - 1. dates at the begin of the array so full scan with `some` is a bit better 
+    - 2.  we're watching a range that includes all the records so both of alg need to look at all elements in the array
+    - 3.  we're searching for last elements therefore the `binarySearch` is better
 
 For point 3. an inverted search with `some`, might have led to same results of `binarySearch` but generally speaking
 it seems that for the overall scenario, the `binarySearch` approach seems better.
