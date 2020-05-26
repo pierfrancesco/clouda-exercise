@@ -1,11 +1,11 @@
 /**
- * binarySearchMod
+ * binarySearchRange
  * @param array
  * @param startDate
  * @param endDate
  * @returns {number}
  */
-const binarySearchMod = (array, startDate, endDate) => {
+const binarySearchRange = (array, startDate, endDate) => {
   let left = 0;
   let right = array.length - 1;
   let foundedFirstElementInTheMiddleIndex = -1;
@@ -24,6 +24,32 @@ const binarySearchMod = (array, startDate, endDate) => {
   return foundedFirstElementInTheMiddleIndex;
 }
 
+/**
+ *
+ * @param array
+ * @param dateToSearch
+ * @returns {number}
+ */
+const binarySearch = (array, dateToSearch) => {
+  let left = 0;
+  let right = array.length - 1;
+  let foundedElementIndex = -1;
+  while (left <= right) {
+    let middleIndex = parseInt((right + left) / 2);
+    let currentDate = new Date(array[middleIndex].x);
+    if (currentDate.toString() === dateToSearch.toString()) {
+      foundedElementIndex = middleIndex;
+      return array[middleIndex];
+    } else if (currentDate < dateToSearch) {
+      left = middleIndex + 1
+    } else {
+      right = middleIndex - 1;
+    }
+  }
+  return foundedElementIndex;
+}
+
 module.exports = {
-  binarySearchMod: binarySearchMod
+  binarySearchRange: binarySearchRange,
+  binarySearch: binarySearch
 }

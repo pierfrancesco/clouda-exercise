@@ -172,7 +172,7 @@ const scoreIntervalQueryOptimized = (start_date, end_date) => {
 
   // start search, binary first, then scan O(m * log n) first
   const result = [];
-  const indexToStartSearch = binarySearchMod(scoreDataSeries[0].series, startDateCast, endDateCast);
+  const indexToStartSearch = binarySearchRange(scoreDataSeries[0].series, startDateCast, endDateCast);
 
   // start search left to right;
   let rightReached = false;

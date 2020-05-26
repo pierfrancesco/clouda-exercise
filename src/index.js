@@ -6,7 +6,7 @@ const Errors = require('./models/Errors');
 const Constants = require('./models/Constants');
 
 // CONTROLLERS
-const binarySearchMod = require('./controllers/utils').binarySearchMod;
+const {binarySearchRange, binarySearch} = require('./controllers/utils');
 
 // OTHER
 const {performance} = require('perf_hooks');
@@ -135,7 +135,7 @@ const scoreIntervalQueryOptimized = (start_date, end_date) => {
 
   // start search, binary first, then scan O(m * log n) first
   const result = [];
-  const indexToStartSearch = binarySearchMod(scoreDataSeries[0].series, startDateCast, endDateCast);
+  const indexToStartSearch = binarySearchRange(scoreDataSeries[0].series, startDateCast, endDateCast);
 
   // start search left to right;
   let rightReached = false;
@@ -183,10 +183,30 @@ scoreIntervalQuery('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.493000Z')
  */
 const retrieveExtraInfo = (keyScore) => {
   // inputs check
+  if (typeof keyScore === "undefined") throw 'TODO: undefined'
 
+  // extract score object & check
+  let overallData =
+    data.data !== undefined && data.data.length > 0 ?
+      data.data.filter(elem => elem.slug === Constants.SLUGS.AGGREGATION_OVERALL) : [];
+  if (overallData.length === 0) throw Errors.NO_DATA_FOR_SLUG_AGGREGATION_OVERALL.message;
+
+  // extract details object & check
+  let extraData = overallData.map(elem => elem.details);
+  if (extraData.length === 0) throw Errors.NO_DETAILS_FOR_SLUG_AGGREGATION_OVERALL.message;
+
+  // extract series for key score & check
+  let extraDataSeries = extraData[0].filter(elem => elem.key === Constants.KEYS.EXTRA);
+  if (
+    extraDataSeries.length === 0 ||
+    typeof extraDataSeries[0].series === "undefined"
+  ) throw 'TODO:'
+
+  let result = binarySearch(extraDataSeries[0].series, new Date(keyScore));
+  if (typeof result.y !== "undefined") return result.y
+  return {}
 }
 
-
-
+console.log(retrieveExtraInfo("2017-01-17T12:56:49.551434Z"));
 
 
