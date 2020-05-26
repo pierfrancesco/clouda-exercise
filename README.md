@@ -53,10 +53,10 @@ const scoreIntervalQuery = (start_date, end_date) => {
   const now = performance.now();
 
   // inputs check
-  if (typeof start_date === "undefined") throw Errors.START_DATE_NOT_DEFINED;
-  if (typeof start_date !== "string") throw Errors.START_DATE_TYPE_IS_NOT_A_STRING;
-  if (typeof end_date === "undefined") throw Errors.END_DATE_NOT_DEFINED;
-  if (typeof end_date !== "string") throw Errors.END_DATE_TYPE_IS_NOT_A_STRING;
+  if (typeof start_date === "undefined") throw Errors.START_DATE_NOT_DEFINED.message;
+  if (typeof start_date !== "string") throw Errors.START_DATE_TYPE_IS_NOT_A_STRING.message;
+  if (typeof end_date === "undefined") throw Errors.END_DATE_NOT_DEFINED.message;
+  if (typeof end_date !== "string") throw Errors.END_DATE_TYPE_IS_NOT_A_STRING.message;
 
   // cast date from string to date format
   const startDateCast = new Date(start_date);
@@ -66,24 +66,24 @@ const scoreIntervalQuery = (start_date, end_date) => {
   if (
     startDateCast === Constants.OTHERS.INVALID_DATE ||
     endDateCast === Constants.OTHERS.INVALID_DATE
-  ) throw Errors.CAST_START_DATE_END_DATE_ERROR;
+  ) throw Errors.CAST_START_DATE_END_DATE_ERROR.message;
 
   // extract score object & check
   let overallData =
     data.data !== undefined && data.data.length > 0 ?
       data.data.filter(elem => elem.slug === Constants.SLUGS.AGGREGATION_OVERALL) : [];
-  if (overallData.length === 0) throw Errors.NO_DATA_FOR_SLUG_AGGREGATION_OVERALL;
+  if (overallData.length === 0) throw Errors.NO_DATA_FOR_SLUG_AGGREGATION_OVERALL.message;
 
   // extract details object & check
   let scoreData = overallData.map(elem => elem.details);
-  if (scoreData.length === 0) throw Errors.NO_DETAILS_FOR_SLUG_AGGREGATION_OVERALL;
+  if (scoreData.length === 0) throw Errors.NO_DETAILS_FOR_SLUG_AGGREGATION_OVERALL.message;
 
   // extract series for key score & check
   let scoreDataSeries = scoreData[0].filter(elem => elem.key === Constants.KEYS.SCORE);
   if (
     scoreDataSeries.length === 0 ||
     typeof scoreDataSeries[0].series === "undefined"
-  ) throw Errors.NO_SERIES_FOR_KEY_SCORE_IN_SLUG_AGGREGATION_OVERALL;
+  ) throw Errors.NO_SERIES_FOR_KEY_SCORE_IN_SLUG_AGGREGATION_OVERALL.message;
 
   // start search, brute force O(n) first
   const result = [];
@@ -99,20 +99,7 @@ const scoreIntervalQuery = (start_date, end_date) => {
 
   const timeToComplete = (performance.now() - now) / 1000
   console.log(`Results found naive: ${result.length} in ${timeToComplete} seconds`);
-  return {
-    result: result,
-    start_date: start_date,
-    end_date: end_date
-  };
-}
-```
-
-It takes two parameters and return an object such this:
-```javascript
-{
-  "result" : array,
-  "start_date" : start_date,
-  "end_date" : end_date
+  return result;
 }
 ```
 
@@ -144,10 +131,10 @@ const scoreIntervalQueryOptimized = (start_date, end_date) => {
   const now = performance.now();
 
   // inputs check
-  if (typeof start_date === "undefined") throw Errors.START_DATE_NOT_DEFINED;
-  if (typeof start_date !== "string") throw Errors.START_DATE_TYPE_IS_NOT_A_STRING;
-  if (typeof end_date === "undefined") throw Errors.END_DATE_NOT_DEFINED;
-  if (typeof end_date !== "string") throw Errors.END_DATE_TYPE_IS_NOT_A_STRING;
+  if (typeof start_date === "undefined") throw Errors.START_DATE_NOT_DEFINED.message;
+  if (typeof start_date !== "string") throw Errors.START_DATE_TYPE_IS_NOT_A_STRING.message;
+  if (typeof end_date === "undefined") throw Errors.END_DATE_NOT_DEFINED.message;
+  if (typeof end_date !== "string") throw Errors.END_DATE_TYPE_IS_NOT_A_STRING.message;
 
   // cast date from string to date format
   const startDateCast = new Date(start_date);
@@ -157,24 +144,24 @@ const scoreIntervalQueryOptimized = (start_date, end_date) => {
   if (
     startDateCast === Constants.OTHERS.INVALID_DATE ||
     endDateCast === Constants.OTHERS.INVALID_DATE
-  ) throw Errors.CAST_START_DATE_END_DATE_ERROR;
+  ) throw Errors.CAST_START_DATE_END_DATE_ERROR.message;
 
   // extract score object & check
   let overallData =
     data.data !== undefined && data.data.length > 0 ?
       data.data.filter(elem => elem.slug === Constants.SLUGS.AGGREGATION_OVERALL) : [];
-  if (overallData.length === 0) throw Errors.NO_DATA_FOR_SLUG_AGGREGATION_OVERALL;
+  if (overallData.length === 0) throw Errors.NO_DATA_FOR_SLUG_AGGREGATION_OVERALL.message;
 
   // extract details object & check
   let scoreData = overallData.map(elem => elem.details);
-  if (scoreData.length === 0) throw Errors.NO_DETAILS_FOR_SLUG_AGGREGATION_OVERALL;
+  if (scoreData.length === 0) throw Errors.NO_DETAILS_FOR_SLUG_AGGREGATION_OVERALL.message;
 
   // extract series for key score & check
   let scoreDataSeries = scoreData[0].filter(elem => elem.key === Constants.KEYS.SCORE);
   if (
     scoreDataSeries.length === 0 ||
     typeof scoreDataSeries[0].series === "undefined"
-  ) throw Errors.NO_SERIES_FOR_KEY_SCORE_IN_SLUG_AGGREGATION_OVERALL;
+  ) throw Errors.NO_SERIES_FOR_KEY_SCORE_IN_SLUG_AGGREGATION_OVERALL.message;
 
   // start search, binary first, then scan O(m * log n) first
   const result = [];
@@ -202,11 +189,7 @@ const scoreIntervalQueryOptimized = (start_date, end_date) => {
   const timeToComplete = (performance.now() - now) / 1000
   console.log(`Results found binary: ${result.length} in ${timeToComplete} seconds`);
 
-  return {
-    result: result.sort((a, b) => new Date(a.x) - new Date(b.x)),
-    start_date: start_date,
-    end_date: end_date
-  };
+  return result;
 }
 ```
 
@@ -254,11 +237,11 @@ scoreIntervalQueryOptimized('2019-08-02T10:33:07.768360Z', '2019-10-31T11:24:10.
 ```
 - Write the same function as above to match the case that:
   - The series does not always contains end_date or start_date 
-(so you want the range of elements between start_date and end_date even if there's not the exact value in series?)
   - Start_date and end_date don’t match the “x” key in the serie 
-(so you want for fist case:range start_date to last element in list? and for second case: end_date to first element in list?)
 ```
 
+I've realized the function above to compare the dates in a date-range philosophy. So the previous functions, if I'm
+not wrong, should work also on these two additional conditions.
 
 ## Third part
 

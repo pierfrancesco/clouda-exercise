@@ -30,10 +30,10 @@ const scoreIntervalQuery = (start_date, end_date) => {
   const now = performance.now();
 
   // inputs check
-  if (typeof start_date === "undefined") throw Errors.START_DATE_NOT_DEFINED;
-  if (typeof start_date !== "string") throw Errors.START_DATE_TYPE_IS_NOT_A_STRING;
-  if (typeof end_date === "undefined") throw Errors.END_DATE_NOT_DEFINED;
-  if (typeof end_date !== "string") throw Errors.END_DATE_TYPE_IS_NOT_A_STRING;
+  if (typeof start_date === "undefined") throw Errors.START_DATE_NOT_DEFINED.message;
+  if (typeof start_date !== "string") throw Errors.START_DATE_TYPE_IS_NOT_A_STRING.message;
+  if (typeof end_date === "undefined") throw Errors.END_DATE_NOT_DEFINED.message;
+  if (typeof end_date !== "string") throw Errors.END_DATE_TYPE_IS_NOT_A_STRING.message;
 
   // cast date from string to date format
   const startDateCast = new Date(start_date);
@@ -43,24 +43,24 @@ const scoreIntervalQuery = (start_date, end_date) => {
   if (
     startDateCast === Constants.OTHERS.INVALID_DATE ||
     endDateCast === Constants.OTHERS.INVALID_DATE
-  ) throw Errors.CAST_START_DATE_END_DATE_ERROR;
+  ) throw Errors.CAST_START_DATE_END_DATE_ERROR.message;
 
   // extract score object & check
   let overallData =
     data.data !== undefined && data.data.length > 0 ?
       data.data.filter(elem => elem.slug === Constants.SLUGS.AGGREGATION_OVERALL) : [];
-  if (overallData.length === 0) throw Errors.NO_DATA_FOR_SLUG_AGGREGATION_OVERALL;
+  if (overallData.length === 0) throw Errors.NO_DATA_FOR_SLUG_AGGREGATION_OVERALL.message;
 
   // extract details object & check
   let scoreData = overallData.map(elem => elem.details);
-  if (scoreData.length === 0) throw Errors.NO_DETAILS_FOR_SLUG_AGGREGATION_OVERALL;
+  if (scoreData.length === 0) throw Errors.NO_DETAILS_FOR_SLUG_AGGREGATION_OVERALL.message;
 
   // extract series for key score & check
   let scoreDataSeries = scoreData[0].filter(elem => elem.key === Constants.KEYS.SCORE);
   if (
     scoreDataSeries.length === 0 ||
     typeof scoreDataSeries[0].series === "undefined"
-  ) throw Errors.NO_SERIES_FOR_KEY_SCORE_IN_SLUG_AGGREGATION_OVERALL;
+  ) throw Errors.NO_SERIES_FOR_KEY_SCORE_IN_SLUG_AGGREGATION_OVERALL.message;
 
   // start search, brute force O(n) first
   const result = [];
@@ -76,11 +76,7 @@ const scoreIntervalQuery = (start_date, end_date) => {
 
   const timeToComplete = (performance.now() - now) / 1000
   console.log(`Results found naive: ${result.length} in ${timeToComplete} seconds`);
-  return {
-    result: result,
-    start_date: start_date,
-    end_date: end_date
-  };
+  return result;
 }
 
 /**
@@ -102,10 +98,10 @@ const scoreIntervalQueryOptimized = (start_date, end_date) => {
   const now = performance.now();
 
   // inputs check
-  if (typeof start_date === "undefined") throw Errors.START_DATE_NOT_DEFINED;
-  if (typeof start_date !== "string") throw Errors.START_DATE_TYPE_IS_NOT_A_STRING;
-  if (typeof end_date === "undefined") throw Errors.END_DATE_NOT_DEFINED;
-  if (typeof end_date !== "string") throw Errors.END_DATE_TYPE_IS_NOT_A_STRING;
+  if (typeof start_date === "undefined") throw Errors.START_DATE_NOT_DEFINED.message;
+  if (typeof start_date !== "string") throw Errors.START_DATE_TYPE_IS_NOT_A_STRING.message;
+  if (typeof end_date === "undefined") throw Errors.END_DATE_NOT_DEFINED.message;
+  if (typeof end_date !== "string") throw Errors.END_DATE_TYPE_IS_NOT_A_STRING.message;
 
   // cast date from string to date format
   const startDateCast = new Date(start_date);
@@ -115,24 +111,24 @@ const scoreIntervalQueryOptimized = (start_date, end_date) => {
   if (
     startDateCast === Constants.OTHERS.INVALID_DATE ||
     endDateCast === Constants.OTHERS.INVALID_DATE
-  ) throw Errors.CAST_START_DATE_END_DATE_ERROR;
+  ) throw Errors.CAST_START_DATE_END_DATE_ERROR.message;
 
   // extract score object & check
   let overallData =
     data.data !== undefined && data.data.length > 0 ?
       data.data.filter(elem => elem.slug === Constants.SLUGS.AGGREGATION_OVERALL) : [];
-  if (overallData.length === 0) throw Errors.NO_DATA_FOR_SLUG_AGGREGATION_OVERALL;
+  if (overallData.length === 0) throw Errors.NO_DATA_FOR_SLUG_AGGREGATION_OVERALL.message;
 
   // extract details object & check
   let scoreData = overallData.map(elem => elem.details);
-  if (scoreData.length === 0) throw Errors.NO_DETAILS_FOR_SLUG_AGGREGATION_OVERALL;
+  if (scoreData.length === 0) throw Errors.NO_DETAILS_FOR_SLUG_AGGREGATION_OVERALL.message;
 
   // extract series for key score & check
   let scoreDataSeries = scoreData[0].filter(elem => elem.key === Constants.KEYS.SCORE);
   if (
     scoreDataSeries.length === 0 ||
     typeof scoreDataSeries[0].series === "undefined"
-  ) throw Errors.NO_SERIES_FOR_KEY_SCORE_IN_SLUG_AGGREGATION_OVERALL;
+  ) throw Errors.NO_SERIES_FOR_KEY_SCORE_IN_SLUG_AGGREGATION_OVERALL.message;
 
   // start search, binary first, then scan O(m * log n) first
   const result = [];
@@ -160,18 +156,14 @@ const scoreIntervalQueryOptimized = (start_date, end_date) => {
   const timeToComplete = (performance.now() - now) / 1000
   console.log(`Results found binary: ${result.length} in ${timeToComplete} seconds`);
 
-  return {
-    result: result.sort((a, b) => new Date(a.x) - new Date(b.x)),
-    start_date: start_date,
-    end_date: end_date
-  };
+  return result;
 }
 
 // Exercise
-scoreIntervalQuery('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.493000Z');
-scoreIntervalQueryOptimized('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.493000Z');
+//scoreIntervalQuery('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.493000Z');
+//scoreIntervalQueryOptimized('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.493000Z');
 
-// All elements (worst case for optimizated cause optimization is === to naive solution)
+// All elements (worst case for optimized cause optimization is === to naive solution)
 //scoreIntervalQuery('2015-08-19T14:00:19.352000Z', '2019-11-19T17:14:34.796982Z');
 //scoreIntervalQueryOptimized('2015-08-19T14:00:19.352000Z', '2019-11-19T17:14:34.796982Z');
 
@@ -180,11 +172,16 @@ scoreIntervalQueryOptimized('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.
 //scoreIntervalQueryOptimized('2019-08-02T10:33:07.768360Z', '2019-10-31T11:24:10.593497Z');
 
 
+scoreIntervalQuery('2014-08-19T14:00:19.352000Z', '2020-10-12T07:27:47.493000Z');
+scoreIntervalQueryOptimized('2014-08-19T14:00:19.352000Z', '2020-10-12T07:27:47.493000Z');
+
+
 /**
  * retrieveExtraInfo
  * @param keyScore
  */
 const retrieveExtraInfo = (keyScore) => {
+  // inputs check
 
 }
 
