@@ -178,7 +178,7 @@ const scoreIntervalQueryOptimized = (start_date, end_date) => {
 
   // start search, binary first, then scan O(m * log n) first
   const result = [];
-  let indexToStartSearch = binarySearch(scoreDataSeries[0].series, startDateCast, endDateCast);
+  const indexToStartSearch = binarySearchMod(scoreDataSeries[0].series, startDateCast, endDateCast);
 
   // start search left to right;
   let rightReached = false;
@@ -212,7 +212,7 @@ const scoreIntervalQueryOptimized = (start_date, end_date) => {
 
 ## HOW TO RUN THE CODE
 
-The functions are made under node env so, once cloned the repo, running `npm start` will execute the file inside 
+I've used node so, once cloned the repo, running `npm start` will execute the file inside 
 `scr/index.js`;
 
 Now there are two function invocations.
@@ -225,7 +225,7 @@ scoreIntervalQueryOptimized('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.
 ```
 
 ## RESULTS
-Here some results ran on my machine with node (NB: run one instruction at time to prevent memory caching of any kind):
+Here some results ran on my machine. Please run one instruction at time to prevent memory caching of any kind.
 
 ```javascript
 // Exercise

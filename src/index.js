@@ -6,7 +6,7 @@ const Errors = require('./models/Errors');
 const Constants = require('./models/Constants');
 
 // CONTROLLERS
-const binarySearch = require('./controllers/utils').binarySearch;
+const binarySearchMod = require('./controllers/utils').binarySearchMod;
 
 // OTHER
 const {performance} = require('perf_hooks');
@@ -136,7 +136,7 @@ const scoreIntervalQueryOptimized = (start_date, end_date) => {
 
   // start search, binary first, then scan O(m * log n) first
   const result = [];
-  let indexToStartSearch = binarySearch(scoreDataSeries[0].series, startDateCast, endDateCast);
+  const indexToStartSearch = binarySearchMod(scoreDataSeries[0].series, startDateCast, endDateCast);
 
   // start search left to right;
   let rightReached = false;
@@ -178,6 +178,15 @@ scoreIntervalQueryOptimized('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.
 // Worst case for linear solution last few dates
 //scoreIntervalQuery('2019-08-02T10:33:07.768360Z', '2019-10-31T11:24:10.593497Z');
 //scoreIntervalQueryOptimized('2019-08-02T10:33:07.768360Z', '2019-10-31T11:24:10.593497Z');
+
+
+/**
+ * retrieveExtraInfo
+ * @param keyScore
+ */
+const retrieveExtraInfo = (keyScore) => {
+
+}
 
 
 

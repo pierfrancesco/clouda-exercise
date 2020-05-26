@@ -1,4 +1,11 @@
-function binarySearch (array, startDate, endDate) {
+/**
+ * binarySearchMod
+ * @param array
+ * @param startDate
+ * @param endDate
+ * @returns {number}
+ */
+const binarySearchMod = (array, startDate, endDate) => {
   let left = 0;
   let right = array.length - 1;
   let foundedFirstElementInTheMiddleIndex = -1;
@@ -18,5 +25,5 @@ function binarySearch (array, startDate, endDate) {
 }
 
 module.exports = {
-  binarySearch: binarySearch
+  binarySearchMod: binarySearchMod
 }
