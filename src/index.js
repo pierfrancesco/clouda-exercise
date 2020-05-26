@@ -11,6 +11,8 @@ const {binarySearchRange, binarySearch} = require('./controllers/utils');
 // OTHER
 const {performance} = require('perf_hooks');
 
+/***************************************************************************/
+
 /**
  * scoreIntervalQuery - Time Complexity: O(n)
  * @param {String} start_date
@@ -78,9 +80,11 @@ const scoreIntervalQuery = (start_date, end_date) => {
   });
 
   const timeToComplete = (performance.now() - now) / 1000
-  console.log(`Results found naive: ${result.length} in ${timeToComplete} seconds`);
+  console.log(`Results found with "some": ${result.length} in ${timeToComplete} seconds`);
   return result;
 }
+
+/***************************************************************************/
 
 /**
  * scoreIntervalQuery - Time Complexity: O(M * log N)
@@ -164,9 +168,9 @@ const scoreIntervalQueryOptimized = (start_date, end_date) => {
 
 // Best case for first function
 scoreIntervalQuery('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.493000Z');
-//scoreIntervalQueryOptimized('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.493000Z');
+scoreIntervalQueryOptimized('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.493000Z');
 
-// All elements (worst case for optimized cause optimization is === to naive solution)
+// All elements (worst case for optimized cause optimization is === to with "some" solution)
 //scoreIntervalQuery('2015-08-19T14:00:19.352000Z', '2019-11-19T17:14:34.796982Z');
 //scoreIntervalQueryOptimized('2015-08-19T14:00:19.352000Z', '2019-11-19T17:14:34.796982Z');
 
@@ -177,13 +181,21 @@ scoreIntervalQuery('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.493000Z')
 //scoreIntervalQuery('2014-08-19T14:00:19.352000Z', '2020-10-12T07:27:47.493000Z');
 //scoreIntervalQueryOptimized('2014-08-19T14:00:19.352000Z', '2020-10-12T07:27:47.493000Z');
 
+/***************************************************************************/
+
 /**
- * retrieveExtraInfo
+ * retrieveExtraInfo - Time Complexity O(log n)
  * @param keyScore
+ * return {Object}
+ *
+ * Error: Errors.KEY_STORE_NOT_A_STRING
+ * Error: Errors.NO_DATA_FOR_SLUG_AGGREGATION_OVERALL
+ * Error: Errors.NO_DETAILS_FOR_SLUG_AGGREGATION_OVERALL
+ * Error: Errors.NO_SERIES_FOR_KEY_EXTRA_IN_SLUG_AGGREGATION_OVERALL
  */
 const retrieveExtraInfo = (keyScore) => {
   // inputs check
-  if (typeof keyScore === "undefined") throw 'TODO: undefined'
+  if (typeof keyScore !== "string") throw Errors.KEY_STORE_NOT_A_STRING.message
 
   // extract score object & check
   let overallData =
@@ -200,8 +212,9 @@ const retrieveExtraInfo = (keyScore) => {
   if (
     extraDataSeries.length === 0 ||
     typeof extraDataSeries[0].series === "undefined"
-  ) throw 'TODO:'
+  ) throw Errors.NO_SERIES_FOR_KEY_EXTRA_IN_SLUG_AGGREGATION_OVERALL.message;
 
+  // perform binary search
   let result = binarySearch(extraDataSeries[0].series, new Date(keyScore));
   if (typeof result.y !== "undefined") return result.y
   return {}

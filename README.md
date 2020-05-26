@@ -101,7 +101,7 @@ const scoreIntervalQuery = (start_date, end_date) => {
   });
 
   const timeToComplete = (performance.now() - now) / 1000
-  console.log(`Results found naive: ${result.length} in ${timeToComplete} seconds`);
+  console.log(`Results found with "some": ${result.length} in ${timeToComplete} seconds`);
   return result;
 }
 ```
@@ -218,31 +218,31 @@ scoreIntervalQueryOptimized('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.
 Here some results ran on my machine. Please run one instruction at time to prevent memory caching of any kind.
 
 ```javascript
-// Exercise
+// Exercise: this is the best case for 1st cause dates to search are at the begin of the series
 scoreIntervalQuery('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.493000Z');
-// Results found naive: 3 in 0.00037344199419021606 seconds
+// Results found with "some": 3 in 0.00037344199419021606 seconds
 scoreIntervalQueryOptimized('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.493000Z');
 // Results found binary: 3 in 0.00041268500685691834 seconds
 
 
-// All elements (worst case for optimized cause optimization is === to naive solution)
+// All elements (worst case for optimized cause optimization is === to with "some" solution)
 scoreIntervalQuery('2015-08-19T14:00:19.352000Z', '2019-11-19T17:14:34.796982Z');
-//Results found naive: 1086 in 0.0026423140168190004 seconds
+//Results found with "some": 1086 in 0.0026423140168190004 seconds
 scoreIntervalQueryOptimized('2015-08-19T14:00:19.352000Z', '2019-11-19T17:14:34.796982Z');
 // Results found binary: 1086 in 0.00235623699426651 seconds
 
 
 // Worst case for linear solution last few dates
 scoreIntervalQuery('2019-08-02T10:33:07.768360Z', '2019-10-31T11:24:10.593497Z');
-// Results found naive: 5 in 0.002391831010580063 seconds
+// Results found with "some": 5 in 0.002391831010580063 seconds
 scoreIntervalQueryOptimized('2019-08-02T10:33:07.768360Z', '2019-10-31T11:24:10.593497Z');
 // Results found binary: 5 in 0.00040950697660446165 seconds
 ```
 
-If I'm not wrong in worst case scenario, a date range with full scan, they behave in the same way O(n).
-
-But for other cases where, let's say, we could have a large data set and we might be interested in get the last month,
-the optimized version could have some benefits. 
+Here we have seen three different scenario:
+    1 is dates at the begin of the array so full scan with `some` is a bit better 
+    2 we're watching a range that includes all the records so both of algs need to look at all elements in the array
+    3 we're searching for last elements therefore the `binarySearch` is better
 
 ## Second part
 
@@ -269,12 +269,18 @@ At the moment I've only implemented the solution with binarySearch.
 
 ```javascript
 /**
- * retrieveExtraInfo
+ * retrieveExtraInfo - Time Complexity O(log n)
  * @param keyScore
+ * return {Object}
+ *
+ * Error: Errors.KEY_STORE_NOT_A_STRING
+ * Error: Errors.NO_DATA_FOR_SLUG_AGGREGATION_OVERALL
+ * Error: Errors.NO_DETAILS_FOR_SLUG_AGGREGATION_OVERALL
+ * Error: Errors.NO_SERIES_FOR_KEY_EXTRA_IN_SLUG_AGGREGATION_OVERALL
  */
 const retrieveExtraInfo = (keyScore) => {
   // inputs check
-  if (typeof keyScore === "undefined") throw 'TODO: undefined'
+  if (typeof keyScore !== "string") throw Errors.KEY_STORE_NOT_A_STRING.message
 
   // extract score object & check
   let overallData =
@@ -291,13 +297,12 @@ const retrieveExtraInfo = (keyScore) => {
   if (
     extraDataSeries.length === 0 ||
     typeof extraDataSeries[0].series === "undefined"
-  ) throw 'TODO:'
+  ) throw Errors.NO_SERIES_FOR_KEY_EXTRA_IN_SLUG_AGGREGATION_OVERALL.message;
 
+  // perform binary search
   let result = binarySearch(extraDataSeries[0].series, new Date(keyScore));
   if (typeof result.y !== "undefined") return result.y
   return {}
 }
-
-console.log(retrieveExtraInfo("2017-01-17T12:56:49.551434Z"));
 ```
 
