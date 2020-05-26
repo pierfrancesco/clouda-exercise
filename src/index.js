@@ -77,7 +77,7 @@ const scoreIntervalQuery = (start_date, end_date) => {
 }
 
 /**
- * scoreIntervalQuery - Time Complexity: O(M * logN)
+ * scoreIntervalQuery - Time Complexity: O(M * log N)
  * @param {String} start_date
  * @param {String} end_date
  * returns {Array}
@@ -127,7 +127,7 @@ const scoreIntervalQueryOptimized = (start_date, end_date) => {
     typeof scoreDataSeries[0].series === "undefined"
   ) throw Errors.NO_SERIES_FOR_KEY_SCORE_IN_SLUG_AGGREGATION_OVERALL;
 
-  // start search, brute force O(n) first
+  // start search, binary first, then scan O(m * log n) first
   const result = [];
   let indexToStartSearch = binarySearch(scoreDataSeries[0].series, startDateCast, endDateCast);
 
