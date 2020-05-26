@@ -1,7 +1,14 @@
+// DATA
 const data = require('../static/data.json');
+
+// MODELS
 const Errors = require('./models/Errors');
 const Constants = require('./models/Constants');
+
+// CONTROLLERS
 const binarySearch = require('./controllers/utils').binarySearch;
+
+// OTHER
 const {performance} = require('perf_hooks');
 
 /**

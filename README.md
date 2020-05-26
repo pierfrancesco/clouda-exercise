@@ -5,7 +5,8 @@
 ```
 - Write a function that having a start_date and an end_date as input returns the subset of data included between the two for the slug ‘aggregation-overall’ and for the key ‘score’
   - Assume the start_date and end_date exactly match the “x” key in the serie
-  - start_date and end_date must be included in the returned data (you mean in the Expected result?).
+  - start_date and end_date must be included in the returned data 
+(you mean in the Expected result?).
   - The series always contains start_date and end_date
 	
   Input: 
@@ -214,7 +215,7 @@ const scoreIntervalQueryOptimized = (start_date, end_date) => {
 The functions are made under node env so, once cloned the repo, running `npm start` will execute the file inside 
 `scr/index.js`;
 
-In this moment there are two functions calls, the one naive and the other optimized.
+Now there are two function invocations.
 ```javascript
 // src/index.js
 
