@@ -62,16 +62,19 @@ const scoreIntervalQuery = (start_date, end_date) => {
     typeof scoreDataSeries[0].series === "undefined"
   ) throw Errors.NO_SERIES_FOR_KEY_SCORE_IN_SLUG_AGGREGATION_OVERALL.message;
 
-  // start search, brute force O(n) first
+  // start search, with exit condition if currentDate is > then end date
   const result = [];
-  scoreDataSeries[0].series.forEach(elem => {
-    if (typeof elem.x === "undefined") return
+  scoreDataSeries[0].series.some(elem => {
+    if (typeof elem.x === "undefined") return false
     let currentDateToCompare = new Date(elem.x);
-    if (currentDateToCompare === Constants.OTHERS.INVALID_DATE) return
+    if (currentDateToCompare === Constants.OTHERS.INVALID_DATE) return false
 
     if (currentDateToCompare >= startDateCast && currentDateToCompare <= endDateCast) {
       result.push(elem);
+      return false;
     }
+
+    if (currentDateToCompare > endDateCast) return true;
   });
 
   const timeToComplete = (performance.now() - now) / 1000
@@ -159,8 +162,8 @@ const scoreIntervalQueryOptimized = (start_date, end_date) => {
   return result;
 }
 
-// Exercise
-//scoreIntervalQuery('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.493000Z');
+// Best case for first function
+scoreIntervalQuery('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.493000Z');
 //scoreIntervalQueryOptimized('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.493000Z');
 
 // All elements (worst case for optimized cause optimization is === to naive solution)
@@ -171,10 +174,8 @@ const scoreIntervalQueryOptimized = (start_date, end_date) => {
 //scoreIntervalQuery('2019-08-02T10:33:07.768360Z', '2019-10-31T11:24:10.593497Z');
 //scoreIntervalQueryOptimized('2019-08-02T10:33:07.768360Z', '2019-10-31T11:24:10.593497Z');
 
-
-scoreIntervalQuery('2014-08-19T14:00:19.352000Z', '2020-10-12T07:27:47.493000Z');
-scoreIntervalQueryOptimized('2014-08-19T14:00:19.352000Z', '2020-10-12T07:27:47.493000Z');
-
+//scoreIntervalQuery('2014-08-19T14:00:19.352000Z', '2020-10-12T07:27:47.493000Z');
+//scoreIntervalQueryOptimized('2014-08-19T14:00:19.352000Z', '2020-10-12T07:27:47.493000Z');
 
 /**
  * retrieveExtraInfo

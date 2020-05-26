@@ -85,16 +85,19 @@ const scoreIntervalQuery = (start_date, end_date) => {
     typeof scoreDataSeries[0].series === "undefined"
   ) throw Errors.NO_SERIES_FOR_KEY_SCORE_IN_SLUG_AGGREGATION_OVERALL.message;
 
-  // start search, brute force O(n) first
+  // start search, with exit condition if currentDate is > then end date
   const result = [];
-  scoreDataSeries[0].series.forEach(elem => {
-    if (typeof elem.x === "undefined") return
+  scoreDataSeries[0].series.some(elem => {
+    if (typeof elem.x === "undefined") return false
     let currentDateToCompare = new Date(elem.x);
-    if (currentDateToCompare === Constants.OTHERS.INVALID_DATE) return
+    if (currentDateToCompare === Constants.OTHERS.INVALID_DATE) return false
 
     if (currentDateToCompare >= startDateCast && currentDateToCompare <= endDateCast) {
       result.push(elem);
+      return false;
     }
+
+    if (currentDateToCompare > endDateCast) return true;
   });
 
   const timeToComplete = (performance.now() - now) / 1000
@@ -106,10 +109,14 @@ const scoreIntervalQuery = (start_date, end_date) => {
 I assumed that the inputs are strings, so the function checks if input types are string otherwise it fires an error.
 I added some checks while exploring the data object in case some properties or data are missing (never say never).
 
+I used a `.some` es6 method to loop over dates so in case my current range is ouf of current date I can stop iterate.
+This is possible because the series is sort ASC by date.
+
 ### 1st Solution - Optimized
 
 Finally, I made a 2nd function which is called `scoreIntervalQueryOptimized` that search for date range with 
-binary search rather than a naive scan of all the values. This is possible because the series is sort ASC by date.
+binary search rather than a `some` scan of all the values. 
+This is possible because the series is sort ASC by date.
 
 ```javascript
 /**
@@ -213,7 +220,7 @@ Here some results ran on my machine. Please run one instruction at time to preve
 ```javascript
 // Exercise
 scoreIntervalQuery('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.493000Z');
-// Results found naive: 3 in 0.0025558149814605712 seconds
+// Results found naive: 3 in 0.00037344199419021606 seconds
 scoreIntervalQueryOptimized('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.493000Z');
 // Results found binary: 3 in 0.00041268500685691834 seconds
 
@@ -231,6 +238,11 @@ scoreIntervalQuery('2019-08-02T10:33:07.768360Z', '2019-10-31T11:24:10.593497Z')
 scoreIntervalQueryOptimized('2019-08-02T10:33:07.768360Z', '2019-10-31T11:24:10.593497Z');
 // Results found binary: 5 in 0.00040950697660446165 seconds
 ```
+
+If I'm not wrong in worst case scenario, a date range with full scan, they behave in the same way O(n).
+
+But for other cases where, let's say, we could have a large data set and we might be interested in get the last month,
+the optimized version could have some benefits. 
 
 ## Second part
 
