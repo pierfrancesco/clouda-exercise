@@ -272,7 +272,7 @@ At the moment I've only implemented the solution with binarySearch.
 ```javascript
 /**
  * retrieveExtraInfo - Time Complexity O(log n)
- * @param keyScore
+ * @param {String} keyScore
  * return {Object}
  *
  * Error: Errors.KEY_STORE_NOT_A_STRING

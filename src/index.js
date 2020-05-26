@@ -185,7 +185,7 @@ scoreIntervalQueryOptimized('2015-08-19T14:00:19.352000Z', '2015-10-12T07:27:47.
 
 /**
  * retrieveExtraInfo - Time Complexity O(log n)
- * @param keyScore
+ * @param {String} keyScore
  * return {Object}
  *
  * Error: Errors.KEY_STORE_NOT_A_STRING
