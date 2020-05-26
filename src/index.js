@@ -2,14 +2,22 @@ const data = require('../static/data.json');
 const Errors = require('./models/Errors');
 const Constants = require('./models/Constants');
 const binarySearch = require('./controllers/utils').binarySearch;
-const {
-  performance
-} = require('perf_hooks');
+const {performance} = require('perf_hooks');
 
 /**
+ * scoreIntervalQuery - Time Complexity: O(n)
+ * @param {String} start_date
+ * @param {String} end_date
+ * returns {Array}
  *
- * @param start_date
- * @param end_date
+ * Error: Errors.START_DATE_NOT_DEFINED
+ * Error: Errors.START_DATE_TYPE_IS_NOT_A_STRING
+ * Error: Errors.END_DATE_NOT_DEFINED
+ * Error: Errors.END_DATE_TYPE_IS_NOT_A_STRING
+ * Error: Errors.CAST_START_DATE_END_DATE_ERROR
+ * Error: Errors.NO_DATA_FOR_SLUG_AGGREGATION_OVERALL
+ * Error: Errors.NO_DETAILS_FOR_SLUG_AGGREGATION_OVERALL
+ * Error: Errors.NO_SERIES_FOR_KEY_SCORE_IN_SLUG_AGGREGATION_OVERALL
  */
 const scoreIntervalQuery = (start_date, end_date) => {
   const now = performance.now();
@@ -69,10 +77,19 @@ const scoreIntervalQuery = (start_date, end_date) => {
 }
 
 /**
+ * scoreIntervalQuery - Time Complexity: O(M * logN)
+ * @param {String} start_date
+ * @param {String} end_date
+ * returns {Array}
  *
- * @param start_date
- * @param end_date
- * @returns {[]}
+ * Error: Errors.START_DATE_NOT_DEFINED
+ * Error: Errors.START_DATE_TYPE_IS_NOT_A_STRING
+ * Error: Errors.END_DATE_NOT_DEFINED
+ * Error: Errors.END_DATE_TYPE_IS_NOT_A_STRING
+ * Error: Errors.CAST_START_DATE_END_DATE_ERROR
+ * Error: Errors.NO_DATA_FOR_SLUG_AGGREGATION_OVERALL
+ * Error: Errors.NO_DETAILS_FOR_SLUG_AGGREGATION_OVERALL
+ * Error: Errors.NO_SERIES_FOR_KEY_SCORE_IN_SLUG_AGGREGATION_OVERALL
  */
 const scoreIntervalQueryOptimized = (start_date, end_date) => {
   const now = performance.now();
