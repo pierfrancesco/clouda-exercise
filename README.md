@@ -261,3 +261,9 @@ not wrong, should work also on these two additional conditions.
 - Consider that we want to display the data with the key “extra” on mouse over on a point of the key “score”. Write a function to format the data for this use case. 
 (Format data how? Retrieve them given an input? Concatenate them, provide them as an object? Is possible to have an input/output example?)
 ```
+For this part, I assumed that I need to retrieve the info to display from `extra` series given an `x` which is unique for that series. 
+As I mentioned previously, if `x` values are sorted by data we can apply a `binarySearch` to retrieve faster the value. 
+At the moment I've only implemented the solution with binarySearch.
+
+![alt text](./static/complexity.jpg "Complexity")
+
