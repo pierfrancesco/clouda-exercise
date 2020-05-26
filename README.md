@@ -267,3 +267,37 @@ At the moment I've only implemented the solution with binarySearch.
 
 ![alt text](./static/complexity.jpg "Complexity")
 
+```javascript
+/**
+ * retrieveExtraInfo
+ * @param keyScore
+ */
+const retrieveExtraInfo = (keyScore) => {
+  // inputs check
+  if (typeof keyScore === "undefined") throw 'TODO: undefined'
+
+  // extract score object & check
+  let overallData =
+    data.data !== undefined && data.data.length > 0 ?
+      data.data.filter(elem => elem.slug === Constants.SLUGS.AGGREGATION_OVERALL) : [];
+  if (overallData.length === 0) throw Errors.NO_DATA_FOR_SLUG_AGGREGATION_OVERALL.message;
+
+  // extract details object & check
+  let extraData = overallData.map(elem => elem.details);
+  if (extraData.length === 0) throw Errors.NO_DETAILS_FOR_SLUG_AGGREGATION_OVERALL.message;
+
+  // extract series for key score & check
+  let extraDataSeries = extraData[0].filter(elem => elem.key === Constants.KEYS.EXTRA);
+  if (
+    extraDataSeries.length === 0 ||
+    typeof extraDataSeries[0].series === "undefined"
+  ) throw 'TODO:'
+
+  let result = binarySearch(extraDataSeries[0].series, new Date(keyScore));
+  if (typeof result.y !== "undefined") return result.y
+  return {}
+}
+
+console.log(retrieveExtraInfo("2017-01-17T12:56:49.551434Z"));
+```
+
